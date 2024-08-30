@@ -1,8 +1,19 @@
+#include <cstdlib>
+
 #include <cpp_cli/cpp_cli.h>
 
 #include <catch2/catch_test_macros.hpp>
 
 namespace cli {
+TEST_CASE("When no callback is provided, then EXIT_SUCCESS is returned.") {
+  auto command = Command{};
+
+  static constexpr auto args = std::array<std::string_view, 0>{{}};
+  auto const return_value = command.parse(cbegin(args), cend(args));
+
+  CHECK(return_value == EXIT_SUCCESS);
+}
+
 TEST_CASE(
     "The callback of a command gets called and its returned value returned "
     "when an empty list of arguments is parsed.") {

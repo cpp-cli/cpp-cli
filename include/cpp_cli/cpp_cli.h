@@ -14,7 +14,11 @@ class Command {
 
   template<class InputIt>
   return_t parse(InputIt first, InputIt last) const {
-    return callback_();
+    if (callback_) {
+      return callback_();
+    } else {
+      return EXIT_SUCCESS;
+    }
   }
 
  private:
