@@ -1,0 +1,33 @@
+name: Builds Mac Apple Silicon
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: macos-14
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+  
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure build
+      working-directory: ${{runner.workspace}}
+      run: |
+        cmake -S "$GITHUB_WORKSPACE" -B build \
+              -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+    - name: Build lib + tests
+      working-directory: ${{runner.workspace}}
+      run: cmake --build build
+
+    - name: Run tests
+      working-directory: ${{runner.workspace}}/build
+      run: ctest
